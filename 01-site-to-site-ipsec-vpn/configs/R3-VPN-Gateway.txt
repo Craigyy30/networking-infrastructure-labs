@@ -1,0 +1,39 @@
+! R3 - VPN gateway for LAN B
+! Example only. Adjust interface names and commands to the Packet Tracer router model.
+! Lab-only pre-shared key must match R1: LabOnly-ChangeMe123!
+
+hostname R3
+!
+interface GigabitEthernet0/0
+ description WAN-to-R2
+ ip address 10.0.0.6 255.255.255.252
+ crypto map VPN-MAP
+ no shutdown
+!
+interface GigabitEthernet0/1
+ description LAN-B
+ ip address 192.168.20.1 255.255.255.0
+ no shutdown
+!
+ip route 192.168.10.0 255.255.255.0 10.0.0.5
+!
+access-list 110 permit ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+!
+crypto isakmp policy 10
+ encr aes 256
+ hash sha
+ authentication pre-share
+ group 2
+ lifetime 86400
+!
+crypto isakmp key LabOnly-ChangeMe123! address 10.0.0.1
+!
+crypto ipsec transform-set VPN-SET esp-aes 256 esp-sha-hmac
+!
+crypto map VPN-MAP 10 ipsec-isakmp
+ set peer 10.0.0.1
+ set transform-set VPN-SET
+ match address 110
+!
+end
+write memory

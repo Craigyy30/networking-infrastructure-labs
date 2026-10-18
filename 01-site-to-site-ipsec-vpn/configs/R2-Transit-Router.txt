@@ -1,0 +1,20 @@
+! R2 - transit router; no IPsec configuration on this device
+! Adjust interface names to match the Packet Tracer router model.
+
+hostname R2
+!
+interface GigabitEthernet0/0
+ description WAN-to-R1
+ ip address 10.0.0.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ description WAN-to-R3
+ ip address 10.0.0.5 255.255.255.252
+ no shutdown
+!
+ip route 192.168.10.0 255.255.255.0 10.0.0.1
+ip route 192.168.20.0 255.255.255.0 10.0.0.6
+!
+end
+write memory
